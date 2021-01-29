@@ -36,6 +36,9 @@ log.println( "Verify started at: " + new Date() + " in: " + basedir )
 
 def buildLog = new File(basedir, "build.log").readLines()
 
+log.println("build.log")
+log.println(buildLog)
+
 // Check the version was used by the plugin execution
 def versionChanges = buildLog.findAll { it =~ /fr.brouillard.oss.it::issue-146::0 -> 1.0.0/ }
 log.println( "versionChanges: " + versionChanges )

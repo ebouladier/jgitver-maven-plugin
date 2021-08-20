@@ -115,7 +115,7 @@ public class JGitverModelProcessor extends DefaultModelProcessor {
       String calculatedVersion = jgitverSession.getVersion();
 
       if (StringUtils.containsIgnoreCase(
-          relativePath.getCanonicalPath(), multiModuleDirectory.getCanonicalPath())) {
+          relativePath.getCanonicalPath(), multiModuleDirectory.getParentFile().getCanonicalPath())) {
         logger.debug("handling version of project Model from " + location);
 
         jgitverSession.addProject(GAV.from(model.clone()));
@@ -134,13 +134,13 @@ public class JGitverModelProcessor extends DefaultModelProcessor {
                   .getCanonicalFile();
           if (StringUtils.isNotBlank(modelParentRelativePath)
               && StringUtils.containsIgnoreCase(
-                  relativePathParent.getCanonicalPath(), multiModuleDirectory.getCanonicalPath())) {
+                  relativePathParent.getCanonicalPath(), multiModuleDirectory.getParentFile().getCanonicalPath())) {
             model.getParent().setVersion(calculatedVersion);
           }
         }
 
         // we should only register the plugin once, on the main project
-        if (relativePath.getCanonicalPath().equals(multiModuleDirectory.getCanonicalPath())) {
+        //if (relativePath.getCanonicalPath().equals(multiModuleDirectory.getCanonicalPath())) {
           if (JGitverUtils.shouldUseFlattenPlugin(session)) {
             if (shouldSkipPomUpdate(model)) {
               logger.info(
@@ -159,7 +159,7 @@ public class JGitverModelProcessor extends DefaultModelProcessor {
           }
 
           updateScmTag(jgitverSession.getCalculator(), model);
-        }
+        //}
 
         try {
           session
@@ -184,7 +184,7 @@ public class JGitverModelProcessor extends DefaultModelProcessor {
     Plugin flattenPlugin = new Plugin();
     flattenPlugin.setGroupId(ORG_CODEHAUS_MOJO);
     flattenPlugin.setArtifactId(FLATTEN_MAVEN_PLUGIN);
-    flattenPlugin.setVersion(System.getProperty("jgitver.flatten.version", "1.0.1"));
+    flattenPlugin.setVersion(System.getProperty("jgitver.flatten.version", "1.2.2"));
 
     PluginExecution flattenPluginExecution = new PluginExecution();
     flattenPluginExecution.setId("jgitver-flatten-pom");

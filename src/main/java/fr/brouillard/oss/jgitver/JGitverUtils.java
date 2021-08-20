@@ -44,7 +44,7 @@ import org.codehaus.plexus.util.xml.pull.XmlPullParserException;
 /** Misc utils used by the plugin. */
 public final class JGitverUtils {
   public static final String EXTENSION_PREFIX = "jgitver";
-  public static final String EXTENSION_GROUP_ID = "fr.brouillard.oss";
+  public static final String EXTENSION_GROUP_ID = "com.tswe.tcf";
   public static final String EXTENSION_ARTIFACT_ID = "jgitver-maven-plugin";
   public static final String EXTENSION_SKIP = EXTENSION_PREFIX + ".skip";
   public static final String EXTENSION_FORCE_COMPUTATION = EXTENSION_PREFIX + ".forceComputation";

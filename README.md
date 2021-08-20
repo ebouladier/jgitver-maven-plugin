@@ -1,4 +1,4 @@
-# jgitver-maven-plugin
+# jgitver-maven-plugin ([forked by Talentia](TalentiaFork-README.md))
 
 [![Build Status](https://travis-ci.org/jgitver/jgitver-maven-plugin.svg?branch=master)](https://travis-ci.org/jgitver/jgitver-maven-plugin)
 [![Open Hub project report for jgitver-maven-plugin](https://www.openhub.net/p/jgitver-maven-plugin/widgets/project_thin_badge.gif)](https://www.openhub.net/p/jgitver-maven-plugin?ref=sample) [![Discuss](https://badges.gitter.im/jgitver/jgitver.svg)](https://gitter.im/jgitver/Lobby)

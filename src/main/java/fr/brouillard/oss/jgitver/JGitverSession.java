@@ -19,8 +19,11 @@ import java.io.File;
 import java.io.IOException;
 import java.io.StringWriter;
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.LinkedHashSet;
 import java.util.Set;
+import java.util.Map;
+
 import org.simpleframework.xml.*;
 import org.simpleframework.xml.convert.AnnotationStrategy;
 import org.simpleframework.xml.core.Persister;
@@ -29,6 +32,7 @@ import org.simpleframework.xml.strategy.Strategy;
 @Root(name = "jgitver")
 @Default(DefaultType.FIELD)
 public class JGitverSession {
+
   @Transient private JGitverInformationProvider calculator;
 
   @Element(name = "calculatedVersion")
@@ -37,8 +41,17 @@ public class JGitverSession {
   @Element(name = "multiModuleProjectDirectory")
   private File multiModuleDirectory;
 
+  @Element(name = "rootProjectGroupID")
+  private String rootProjectGroupID;
+
   @ElementList(name = "projects", entry = "gav")
   private Set<GAV> projects = new LinkedHashSet<>();
+
+  @ElementList(name = "modulePomPaths", entry = "modulePomPath")
+  private Set<String> modulePomPaths = new LinkedHashSet<String>();
+
+  @ElementMap(name = "gavManagedWithPlugins", entry = "gavManagedWithPlugin")
+  private Map<GAV, Boolean> gavManagedWithPlugins = new HashMap<>();
 
   /* jaxb constructor */
   JGitverSession() {}
@@ -55,6 +68,7 @@ public class JGitverSession {
     this.version = gitVersionCalculator.getVersion();
     this.calculator = gitVersionCalculator;
     this.multiModuleDirectory = multiModuleDirectory;
+    this.rootProjectGroupID = null;
   }
 
   public String getVersion() {
@@ -71,10 +85,35 @@ public class JGitverSession {
 
   public void addProject(GAV project) {
     projects.add(project);
+    gavManagedWithPlugins.putIfAbsent(project, null);
+  }
+
+  public void setManagedWithPlugin(GAV project, boolean flag) {
+    gavManagedWithPlugins.replace(project, flag);
+  }
+
+  public Boolean isManagedWithPlugin(GAV project) {
+    return gavManagedWithPlugins.get(project);
   }
 
   public Set<GAV> getProjects() {
     return Collections.unmodifiableSet(projects);
+  }
+
+  public void setRootProjectGroupID(String rootProjectGroupID) {
+    this.rootProjectGroupID = rootProjectGroupID;
+  }
+
+  public String getRootProjectGroupID() {
+    return rootProjectGroupID;
+  }
+
+  public Set<String> getModulePomPaths() {
+    return Collections.unmodifiableSet(modulePomPaths);
+  }
+
+  public void addModulePomPath(String modulePomPath) {
+    modulePomPaths.add(modulePomPath);
   }
 
   /**

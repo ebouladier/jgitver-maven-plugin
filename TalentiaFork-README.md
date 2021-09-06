@@ -4,38 +4,39 @@ Forked from [jgitver/jgitver-maven-plugin](https://github.com/jgitver/jgitver-ma
 At the same time, we have posted an issue to start reflecting to a solution in the original project [here](https://github.com/jgitver/jgitver-maven-plugin/issues/156)
 
 ## Why a fork ?
-This fork adds support for multi-modules flat directory structure. This layout corresponds to monorepo pattern i.e. several projects in a git repository, all in their own directory, at the root of the git repository.
+This fork adds support for situations where linked projects are not linked by sharing a tree structure which root is the initial built project.
 
 The original project uses directory tree structure to identify projects that have to be managed with the calculated version.
 This approach supposes that the "aggregator" project directory (called multiModuleDirectory in the code) is an ancestor directory of all other projects which version is to be managed by the jgitver plugin.
 This is not compatible with the flat directory layout where all projects are sibling directories, child of the git repository directory.
 
-The assumption of the implemented solution is that, given that the goal of this plugin is to calculate a version code, based on the state of the git repository,
-only projects that are managed in this git repository are eligible to be impacted by the process, whatever is the directory structure of all these projects.
+Use cases :
+Multi-modules flat directory structure. This layout corresponds to monorepo pattern i.e. several projects in a git repository, all in their own directory, at the root of the git repository.
+Multi git repositories. Linked projects are exploded in several git repositories.
 
 
 ## Changes
 
-### class JGitverModelProcessor
-Replace condition that determine if the project must be processed (two places) : 
-```
-StringUtils.containsIgnoreCase(
-          relativePath.getCanonicalPath(), multiModuleDirectory.getCanonicalPath())
-```
-by
-```
-StringUtils.containsIgnoreCase(
-          relativePath.getCanonicalPath(), multiModuleDirectory.getParentFile().getCanonicalPath())
-```
+### class GAV
 
-Remove the conditional registering of the flatten-maven-plugin, in order to execute it on all projects
-`//if (relativePath.getCanonicalPath().equals(multiModuleDirectory.getCanonicalPath())) {`
+Remove the version from the artifact definion because we consider that an artifact is managed by the plugin regardless its original version.
+Add a constructor receiving a Maven Dependency element as the source of artifact and Group identifiers.
+
+### class JGitverModelProcessor
+
+Remove usage of directory structure from the evaluation strategy that determine if a project has to be managed or not by the plugin. It is replaced by analysing
+relationship between projects (modules, parent).
 
 Set the version of the flatten-maven-plugin to the last one (faced bug has been fixed in it)
 `flattenPlugin.setVersion(System.getProperty("jgitver.flatten.version", "1.0.1"));`
 replaced by
 `flattenPlugin.setVersion(System.getProperty("jgitver.flatten.version", "1.2.2"));`
 
+### class JGitverSession
+
+Add a Map in order to manage attachement of Mojo that write the changed pom file on the disk. The attachement must be set on each project and not only on the "aggragator" parent one.
+
+Add a rootProjectGroupID in order to be able to filter managed projects on this information.
 
 ### class JGitverUtils
 Replace the declared original groupID by our own one

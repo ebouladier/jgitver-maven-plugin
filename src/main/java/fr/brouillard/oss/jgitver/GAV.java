@@ -15,15 +15,15 @@
  */
 package fr.brouillard.oss.jgitver;
 
+import org.apache.maven.model.Dependency;
 import org.apache.maven.model.Model;
 import org.apache.maven.model.Parent;
 import org.apache.maven.project.MavenProject;
 
-/** Wrapper for a maven project/dependency identified by a groupId/artifactId/version. */
+/** Wrapper for a maven project/dependency identified by a groupId/artifactId. */
 public class GAV { // SUPPRESS CHECKSTYLE AbbreviationAsWordInName
   private String groupId;
   private String artifactId;
-  private String version;
 
   public GAV() {}
 
@@ -34,10 +34,9 @@ public class GAV { // SUPPRESS CHECKSTYLE AbbreviationAsWordInName
    * @param artifactId the artifactId of the maven object
    * @param version the version of the maven object
    */
-  public GAV(String groupId, String artifactId, String version) {
+  public GAV(String groupId, String artifactId) {
     this.groupId = groupId;
     this.artifactId = artifactId;
-    this.version = version;
   }
 
   /**
@@ -58,25 +57,12 @@ public class GAV { // SUPPRESS CHECKSTYLE AbbreviationAsWordInName
     return artifactId;
   }
 
-  /**
-   * Retrieves the version.
-   *
-   * @return the version
-   */
-  public String getVersion() {
-    return version;
-  }
-
   public void setGroupId(String groupId) {
     this.groupId = groupId;
   }
 
   public void setArtifactId(String artifactId) {
     this.artifactId = artifactId;
-  }
-
-  public void setVersion(String version) {
-    this.version = version;
   }
 
   /**
@@ -86,7 +72,7 @@ public class GAV { // SUPPRESS CHECKSTYLE AbbreviationAsWordInName
    * @return a new GAV object
    */
   public static GAV from(MavenProject project) {
-    return new GAV(project.getGroupId(), project.getArtifactId(), project.getVersion());
+    return new GAV(project.getGroupId(), project.getArtifactId());
   }
 
   /**
@@ -100,12 +86,8 @@ public class GAV { // SUPPRESS CHECKSTYLE AbbreviationAsWordInName
         (model.getGroupId() != null)
             ? model.getGroupId()
             : (model.getParent() != null ? model.getParent().getGroupId() : null);
-    String version =
-        (model.getVersion() != null)
-            ? model.getVersion()
-            : (model.getParent() != null ? model.getParent().getVersion() : null);
 
-    return new GAV(groupId, model.getArtifactId(), version);
+    return new GAV(groupId, model.getArtifactId());
   }
 
   /**
@@ -115,7 +97,17 @@ public class GAV { // SUPPRESS CHECKSTYLE AbbreviationAsWordInName
    * @return a new GAV object
    */
   public static GAV from(Parent parent) {
-    return new GAV(parent.getGroupId(), parent.getArtifactId(), parent.getVersion());
+    return new GAV(parent.getGroupId(), parent.getArtifactId());
+  }
+
+  /**
+   * Builds a GAV object from the given Dependency object.
+   *
+   * @param parent the parent to extract info from
+   * @return a new GAV object
+   */
+  public static GAV from(Dependency dependency) {
+    return new GAV(dependency.getGroupId(), dependency.getArtifactId());
   }
 
   @Override
@@ -124,7 +116,6 @@ public class GAV { // SUPPRESS CHECKSTYLE AbbreviationAsWordInName
     int result = 1;
     result = prime * result + ((artifactId == null) ? 0 : artifactId.hashCode());
     result = prime * result + ((groupId == null) ? 0 : groupId.hashCode());
-    result = prime * result + ((version == null) ? 0 : version.hashCode());
     return result;
   }
 
@@ -154,18 +145,11 @@ public class GAV { // SUPPRESS CHECKSTYLE AbbreviationAsWordInName
     } else if (!groupId.equals(other.groupId)) {
       return false;
     }
-    if (version == null) {
-      if (other.version != null) {
-        return false;
-      }
-    } else if (!version.equals(other.version)) {
-      return false;
-    }
     return true;
   }
 
   @Override
   public String toString() {
-    return String.format("%s::%s::%s", groupId, artifactId, version);
+    return String.format("%s::%s", groupId, artifactId);
   }
 }

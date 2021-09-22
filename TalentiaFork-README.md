@@ -19,18 +19,15 @@ Multi git repositories. Linked projects are exploded in several git repositories
 
 ### class GAV
 
-Remove the version from the artifact definion because we consider that an artifact is managed by the plugin regardless its original version.
-Add a constructor receiving a Maven Dependency element as the source of artifact and Group identifiers.
+Remove the version from the artifact definion because we consider that if an artifact is managed by the plugin, it is regardless its original version.
+Add a constructor receiving a Maven Dependency element.
 
 ### class JGitverModelProcessor
 
 Remove usage of directory structure from the evaluation strategy that determine if a project has to be managed or not by the plugin. It is replaced by analysing
 relationship between projects (modules, parent).
 
-Set the version of the flatten-maven-plugin to the last one (faced bug has been fixed in it)
-`flattenPlugin.setVersion(System.getProperty("jgitver.flatten.version", "1.0.1"));`
-replaced by
-`flattenPlugin.setVersion(System.getProperty("jgitver.flatten.version", "1.2.2"));`
+Set the version of the flatten-maven-plugin to the last one (faced bug has been fixed in it) : "jgitver.flatten.version", "1.2.2"
 
 ### class JGitverSession
 
@@ -49,8 +46,6 @@ Force the version of the produced artifact to the one we want to use
 `<version>0</version>`
 replaced by
 `<version>1.7.1</version>`
-
-Inhibit the spotless-maven-plugin execution, to avoid build failure (to be investigated later)
 
 ### README.md
 Add a link to this file

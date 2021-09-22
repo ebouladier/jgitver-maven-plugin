@@ -791,50 +791,26 @@
 			<activation>
 				<activeByDefault>true</activeByDefault>
 			</activation>
-			<properties>
-				<webSiteUrl>http://rnd-chr-dev-01/${project.groupId}/${project.artifactId}-${project.version}</webSiteUrl>
-				<deployWebSiteServerId>rnd-chr-dev-01</deployWebSiteServerId>
-				<deployWebSiteUrl>file:///D:/IrisEnvDev/SiteWeb/${project.groupId}/${project.artifactId}-${project.version}</deployWebSiteUrl>
-				<scmURL>to be provided by Jenkins Job</scmURL>
-				<scmConnection>to be provided by Jenkins Job</scmConnection>
-				<issueSystem>jiraAgile</issueSystem>
-				<issueURLPrefix>https://talentia.atlassian.net/browse/</issueURLPrefix>
-				<signingKeystoresLocation>D:/IrisEnvDev/signing-keystores</signingKeystoresLocation>
-				<packagingRootDirectory>D:/IrisEnvDev/packaging</packagingRootDirectory>
-			</properties>
-			<repositories>
+			<distributionManagement>
+				<snapshotRepository>
+					<id>libs-snapshots</id>
+					<name>Repository for in-house libraries</name>
+					<url>
+					http://artifactory.lswe.priv/libs-snapshots
+                    </url>
+				</snapshotRepository>
 				<repository>
-					<id>central</id>
-					<url>http://artifactory.lswe.priv/repo/</url>
-					<snapshots>
-						<enabled>false</enabled>
-					</snapshots>
+					<id>libs-releases</id>
+					<name>Repository for in-house libraries</name>
+					<url>
+					http://artifactory.lswe.priv/libs-releases
+                    </url>
 				</repository>
-				<repository>
-					<id>snapshots</id>
-					<url>http://artifactory.lswe.priv/repo/</url>
-					<releases>
-						<enabled>false</enabled>
-					</releases>
-				</repository>
-			</repositories>
-
-			<pluginRepositories>
-				<pluginRepository>
-					<id>central</id>
-					<url>http://artifactory.lswe.priv/repo/</url>
-					<snapshots>
-						<enabled>false</enabled>
-					</snapshots>
-				</pluginRepository>
-				<pluginRepository>
-					<id>snapshots</id>
-					<url>http://artifactory.lswe.priv/repo/</url>
-					<releases>
-						<enabled>false</enabled>
-					</releases>
-				</pluginRepository>
-			</pluginRepositories>
+				<site>
+					<id>${deployWebSiteServerId}</id>
+					<url>${deployWebSiteUrl}</url>
+				</site>
+			</distributionManagement>
 		</profile>
 	</profiles>
 
